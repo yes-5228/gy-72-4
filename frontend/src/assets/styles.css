@@ -524,3 +524,56 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.toast {
+  position: fixed;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+  font-size: 14px;
+  font-weight: 600;
+  background: #fff;
+  color: #17201a;
+  border: 1px solid #dfe7e1;
+}
+
+.toast.success {
+  background: #dcefe5;
+  color: #1e5c3e;
+  border-color: #9ad1b4;
+}
+
+.toast.error {
+  background: #ffe0e0;
+  color: #b45134;
+  border-color: #e8a090;
+}
+
+.toast.info {
+  background: #e0edff;
+  color: #1e5c9e;
+  border-color: #a7c9f2;
+}
+
+.toast-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -12px);
+}

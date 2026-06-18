@@ -71,7 +71,11 @@ async function changeStatus(task, status) {
   }
   const updated = await updateDelivery(task.id, payload)
   Object.assign(task, updated)
-  emit('status-updated')
+  emit('status-updated', {
+    order_id: task.order,
+    status: updated.status,
+    status_label: updated.status_label,
+  })
 }
 
 function formatTime(value) {

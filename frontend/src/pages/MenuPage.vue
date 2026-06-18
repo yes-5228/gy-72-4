@@ -53,6 +53,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['order-created'])
+
 const categories = ref([])
 const dishes = ref([])
 const cart = ref([])
@@ -105,9 +107,10 @@ function decreaseCart(dishId) {
   }
 }
 
-function handleOrderCreated() {
+function handleOrderCreated(order) {
   cart.value = []
   loadData()
+  emit('order-created', order)
 }
 
 onMounted(loadData)
