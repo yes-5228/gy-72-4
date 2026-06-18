@@ -16,6 +16,7 @@ class DeliveryTask(models.Model):
     DELIVERY_TO_ORDER_STATUS = {
         "picked": "delivering",
         "delivered": "completed",
+        "failed": "abnormal",
     }
 
     order = models.OneToOneField(Order, related_name="delivery", on_delete=models.CASCADE)

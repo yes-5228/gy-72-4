@@ -25,7 +25,7 @@
           v-for="order in filteredOrders"
           :key="order.id"
           class="order-card"
-          :class="{ expanded: expandedId === order.id }"
+          :class="{ expanded: expandedId === order.id, abnormal: order.status === 'abnormal' }"
           @click="toggleExpand(order.id)"
         >
           <div class="order-header">
@@ -78,6 +78,10 @@
               </p>
             </div>
 
+            <div v-if="order.status === 'abnormal'" class="abnormal-notice">
+              <p>该订单配送出现异常，暂时无法评价。请联系食堂或配送员处理，异常解决并送达后将可以评价。</p>
+            </div>
+
             <div class="detail-section">
               <h4>菜品明细</h4>
               <div class="order-items">
@@ -128,6 +132,7 @@ const statusTabs = [
   { value: 'pending', label: '待确认' },
   { value: 'delivering', label: '配送中' },
   { value: 'completed', label: '已完成' },
+  { value: 'abnormal', label: '异常' },
 ]
 
 const filteredOrders = computed(() => {
@@ -216,6 +221,15 @@ watch(() => props.reloadKey, loadOrders)
   border-color: #2f7d57;
 }
 
+.order-card.abnormal {
+  border-color: #e8a090;
+  background: #fffbfa;
+}
+
+.order-card.abnormal.expanded {
+  border-color: #b45134;
+}
+
 .order-header {
   display: flex;
   align-items: center;
@@ -262,6 +276,12 @@ watch(() => props.reloadKey, loadOrders)
 .status-badge.cancelled {
   background: #f1f5f2;
   color: #66746b;
+}
+
+.status-badge.abnormal {
+  background: #ffe0e0;
+  color: #b45134;
+  font-weight: 700;
 }
 
 .status-badge.failed,
@@ -370,5 +390,20 @@ watch(() => props.reloadKey, loadOrders)
 
 .detail-actions button {
   padding: 10px 24px;
+}
+
+.abnormal-notice {
+  border: 1px solid #e8a090;
+  border-radius: 8px;
+  background: #fff5f3;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.abnormal-notice p {
+  margin: 0;
+  color: #b45134;
+  font-size: 14px;
+  line-height: 1.6;
 }
 </style>

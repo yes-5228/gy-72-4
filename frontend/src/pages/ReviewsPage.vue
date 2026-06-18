@@ -21,6 +21,21 @@
         </div>
       </div>
 
+      <div v-if="abnormalOrders.length > 0" class="review-abnormal-section">
+        <p class="section-hint abnormal-hint">以下订单配送异常，暂不可评价：</p>
+        <div class="order-mini-list">
+          <div
+            v-for="order in abnormalOrders"
+            :key="order.id"
+            class="order-mini-card abnormal"
+          >
+            <span>订单 #{{ order.id }}<em class="abnormal-tag">异常</em></span>
+            <small>{{ order.items.length }} 类菜品 · ￥{{ order.total_amount }}</small>
+          </div>
+        </div>
+        <p class="abnormal-tip">异常订单需等待配送问题解决并送达后，方可进行评价。如有疑问请联系食堂。</p>
+      </div>
+
       <form class="order-form" @submit.prevent="submitReview">
         <label>
           菜品
@@ -104,6 +119,10 @@ const completedOrders = computed(() =>
   allOrders.value.filter((o) => o.status === 'completed'),
 )
 
+const abnormalOrders = computed(() =>
+  allOrders.value.filter((o) => o.status === 'abnormal'),
+)
+
 const availableDishes = computed(() => {
   if (selectedOrderId.value) {
     const order = allOrders.value.find((o) => o.id === selectedOrderId.value)
@@ -122,8 +141,11 @@ const canSubmit = computed(() => {
 })
 
 const hint = computed(() => {
-  if (completedOrders.value.length === 0) {
+  if (completedOrders.value.length === 0 && abnormalOrders.value.length === 0) {
     return '暂无已完成的订单，订单送达后可进行评价。'
+  }
+  if (completedOrders.value.length === 0 && abnormalOrders.value.length > 0) {
+    return '当前没有可评价的订单，存在异常订单需等待处理完成。'
   }
   if (selectedOrderId.value && !form.dish) {
     return '请选择要评价的菜品。'
@@ -255,5 +277,48 @@ watch(
   margin: 0;
   color: #9a5b00;
   font-size: 13px;
+}
+
+.review-abnormal-section {
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid #e8a090;
+  border-radius: 8px;
+  background: #fff5f3;
+}
+
+.abnormal-hint {
+  color: #b45134 !important;
+  font-weight: 600;
+}
+
+.order-mini-card.abnormal {
+  border-color: #e8a090;
+  background: #fff;
+  cursor: default;
+}
+
+.order-mini-card.abnormal:hover {
+  border-color: #e8a090;
+}
+
+.abnormal-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #ffe0e0;
+  color: #b45134;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.abnormal-tip {
+  margin: 10px 0 0;
+  color: #b45134;
+  font-size: 13px;
+  line-height: 1.5;
 }
 </style>

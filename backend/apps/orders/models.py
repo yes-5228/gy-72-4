@@ -10,6 +10,7 @@ class Order(models.Model):
         ("preparing", "备餐中"),
         ("delivering", "配送中"),
         ("completed", "已完成"),
+        ("abnormal", "异常"),
         ("cancelled", "已取消"),
     ]
 
