@@ -50,6 +50,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['status-updated'])
+
 const deliveries = ref([])
 const loading = ref(false)
 
@@ -69,6 +71,7 @@ async function changeStatus(task, status) {
   }
   const updated = await updateDelivery(task.id, payload)
   Object.assign(task, updated)
+  emit('status-updated')
 }
 
 function formatTime(value) {

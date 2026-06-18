@@ -37,7 +37,7 @@
         :reload-key="reloadKey"
         @navigate-review="handleNavigateReview"
       />
-      <DeliveryPage v-else-if="currentPage === 'delivery'" :reload-key="reloadKey" />
+      <DeliveryPage v-else-if="currentPage === 'delivery'" :reload-key="reloadKey" @status-updated="reloadKey++" />
       <ReviewsPage v-else :reload-key="reloadKey" :selected-order="selectedOrder" />
     </main>
   </div>

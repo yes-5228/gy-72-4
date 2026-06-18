@@ -170,6 +170,12 @@ async function loadData() {
     dishes.value = dishData
     reviews.value = reviewData
     allOrders.value = orderData
+    if (selectedOrderId.value) {
+      const updated = allOrders.value.find((o) => o.id === selectedOrderId.value)
+      if (updated && updated.status === 'completed') {
+        form.student_name = updated.student_name
+      }
+    }
   } finally {
     loading.value = false
   }

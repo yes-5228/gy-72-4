@@ -51,6 +51,6 @@ class DeliveryTask(models.Model):
             order = self.order
             if order.status != target_status:
                 order.status = target_status
-                if self.status == "delivered" and not self.delivered_at:
+                if self.status == "delivered":
                     self.delivered_at = timezone.now()
                 order.save(update_fields=["status", "updated_at"])
