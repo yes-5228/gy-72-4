@@ -1,6 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
 
+from apps.delivery.models import DeliveryTask
 from apps.menu.models import Dish
 from apps.menu.serializers import DishSerializer
 
@@ -16,8 +17,26 @@ class OrderItemSerializer(serializers.ModelSerializer):
         read_only_fields = ["unit_price"]
 
 
+class OrderDeliverySerializer(serializers.ModelSerializer):
+    status_label = serializers.CharField(source="get_status_display", read_only=True)
+
+    class Meta:
+        model = DeliveryTask
+        fields = [
+            "id",
+            "status",
+            "status_label",
+            "courier_name",
+            "courier_phone",
+            "estimated_arrival",
+            "delivered_at",
+        ]
+
+
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
+    status_label = serializers.CharField(source="get_status_display", read_only=True)
+    delivery_info = OrderDeliverySerializer(source="delivery", read_only=True)
 
     class Meta:
         model = Order
@@ -30,8 +49,10 @@ class OrderSerializer(serializers.ModelSerializer):
             "pickup_time",
             "note",
             "status",
+            "status_label",
             "total_amount",
             "items",
+            "delivery_info",
             "created_at",
             "updated_at",
         ]

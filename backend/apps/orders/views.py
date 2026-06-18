@@ -5,7 +5,7 @@ from .serializers import OrderSerializer
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.prefetch_related("items__dish__category").all()
+    queryset = Order.objects.select_related("delivery").prefetch_related("items__dish__category").all()
     serializer_class = OrderSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["student_name", "student_no", "phone", "delivery_address"]

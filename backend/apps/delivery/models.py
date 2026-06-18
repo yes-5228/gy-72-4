@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from apps.orders.models import Order
 
@@ -11,6 +12,11 @@ class DeliveryTask(models.Model):
         ("delivered", "已送达"),
         ("failed", "异常"),
     ]
+
+    DELIVERY_TO_ORDER_STATUS = {
+        "picked": "delivering",
+        "delivered": "completed",
+    }
 
     order = models.OneToOneField(Order, related_name="delivery", on_delete=models.CASCADE)
     courier_name = models.CharField("配送员", max_length=50, blank=True)
@@ -28,3 +34,22 @@ class DeliveryTask(models.Model):
 
     def __str__(self):
         return f"配送任务 #{self.order_id}"
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old_status = DeliveryTask.objects.get(pk=self.pk).status
+            if old_status != self.status:
+                self._sync_order_status()
+        else:
+            self._sync_order_status()
+        super().save(*args, **kwargs)
+
+    def _sync_order_status(self):
+        target_status = self.DELIVERY_TO_ORDER_STATUS.get(self.status)
+        if target_status:
+            order = self.order
+            if order.status != target_status:
+                order.status = target_status
+                if self.status == "delivered" and not self.delivered_at:
+                    self.delivered_at = timezone.now()
+                order.save(update_fields=["status", "updated_at"])

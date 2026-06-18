@@ -7,6 +7,7 @@ from .models import DeliveryTask
 
 class DeliveryTaskSerializer(serializers.ModelSerializer):
     order_detail = OrderSerializer(source="order", read_only=True)
+    status_label = serializers.CharField(source="get_status_display", read_only=True)
 
     class Meta:
         model = DeliveryTask
@@ -18,6 +19,7 @@ class DeliveryTaskSerializer(serializers.ModelSerializer):
             "courier_phone",
             "route",
             "status",
+            "status_label",
             "estimated_arrival",
             "delivered_at",
             "updated_at",
